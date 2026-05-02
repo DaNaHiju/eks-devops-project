@@ -9,7 +9,7 @@ metadata:
 managedNodeGroups:
 
   - name: app-nodes
-    instanceType: t3.micro
+    instanceType: t3.small    # ← was t3.micro
     minSize: 1
     maxSize: 5
     desiredCapacity: 2
@@ -17,9 +17,13 @@ managedNodeGroups:
       role: app
 
   - name: db-nodes
-    instanceType: t3.micro
+    instanceType: t3.small    # ← was t3.micro
     minSize: 1
     maxSize: 2
     desiredCapacity: 1
     labels:
       role: db
+    taints:
+      - key: workload
+        value: database
+        effect: NoSchedule
