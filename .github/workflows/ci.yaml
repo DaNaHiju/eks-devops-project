@@ -30,5 +30,5 @@ jobs:
           wget -q https://github.com/helmfile/helmfile/releases/download/v1.4.4/helmfile_1.4.4_linux_amd64.tar.gz
           tar -zxf helmfile_1.4.4_linux_amd64.tar.gz
           sudo mv helmfile /usr/local/bin/
-          helm plugin install https://github.com/databus23/helm-diff
+          helm plugin install https://github.com/databus23/helm-diff --verify=false
           helmfile lint
