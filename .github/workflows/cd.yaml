@@ -28,7 +28,9 @@ jobs:
 
       - name: Install helmfile + helm-diff
         run: |
-          curl -Lo helmfile.tar.gz https://github.com/helmfile/helmfile/releases/latest/download/helmfile_linux_amd64.tar.gz
+          HELMFILE_VERSION="0.169.2"
+          curl -fsSL -o helmfile.tar.gz \
+            "https://github.com/helmfile/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64.tar.gz"
           tar xf helmfile.tar.gz
           sudo mv helmfile /usr/local/bin/
           helmfile version
