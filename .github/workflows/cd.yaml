@@ -1,0 +1,38 @@
+name: CD — Deploy to EKS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Update kubeconfig
+        run: |
+          aws eks update-kubeconfig \
+            --name eks-devops-project \
+            --region us-east-1
+
+      - name: Install helmfile + helm-diff
+        run: |
+          curl -Lo helmfile.tar.gz https://github.com/helmfile/helmfile/releases/latest/download/helmfile_linux_amd64.tar.gz
+          tar xf helmfile.tar.gz
+          sudo mv helmfile /usr/local/bin/
+          helmfile version
+          helm plugin install https://github.com/databus23/helm-diff || true
+
+      - name: Deploy with helmfile
+        run: helmfile sync
