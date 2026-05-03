@@ -26,15 +26,19 @@ jobs:
             --name eks-devops-project \
             --region us-east-1
 
-      - name: Install helm-diff plugin
-        run: helm plugin install https://github.com/databus23/helm-diff || true
-
-      - name: Install helmfile
-        uses: helmfile/helmfile-action@v2
+      - name: Install Helm v3
+        uses: azure/setup-helm@v4
         with:
-          helmfile-version: 'v1.1.0'
-          helm-plugins: >
-            https://github.com/databus23/helm-diff
+          version: 'v3.17.3'
+
+      - name: Install helmfile + helm-diff
+        run: |
+          curl -fsSL -o helmfile.tar.gz \
+            "https://github.com/helmfile/helmfile/releases/download/v1.1.0/helmfile_1.1.0_linux_amd64.tar.gz"
+          tar xf helmfile.tar.gz
+          sudo mv helmfile /usr/local/bin/
+          helmfile version
+          helm plugin install https://github.com/databus23/helm-diff || true
 
       - name: Deploy with helmfile
         run: helmfile sync
