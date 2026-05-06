@@ -25,4 +25,4 @@ nodeAffinity:
   enabled: true
 
 metrics:
-  enabled: false
+  enabled: true

@@ -40,5 +40,8 @@ jobs:
           helmfile version
           helm plugin install https://github.com/databus23/helm-diff || true
 
-      - name: Deploy with helmfile
-        run: helmfile sync
+      - name: Deploy monitoring
+        run: helmfile apply --selector name=kube-prometheus-stack --timeout 15m
+
+      - name: Deploy apps
+        run: helmfile apply --selector 'name!=kube-prometheus-stack' --timeout 10m

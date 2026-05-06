@@ -31,4 +31,6 @@ dbSecret:
   name: "db-credentials"
 
 metrics:
-  enabled: false
+  enabled: true
+
+

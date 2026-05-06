@@ -1,0 +1,41 @@
+prometheusOperator:
+  admissionWebhooks:
+    enabled: true           # ← volvemos a habilitar
+    patch:
+      enabled: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+      tolerations: []       # ← sin restricciones de nodo
+
+prometheus:
+  prometheusSpec:
+    retention: 7d
+    serviceMonitorSelectorNilUsesHelmValues: false
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          storageClassName: gp2
+          resources:
+            requests:
+              storage: 10Gi
+
+grafana:
+  adminPassword: "changeme123"
+  persistence:
+    enabled: true
+    storageClassName: gp2
+    size: 5Gi
+
+alertmanager:
+  alertmanagerSpec:
+    storage:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          storageClassName: gp2
+          resources:
+            requests:
+              storage: 2Gi
