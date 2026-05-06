@@ -6,10 +6,18 @@ metadata:
   region: us-east-1
   version: "1.31"
 
+iam:
+  withOIDC: true  # ← habilita OIDC automáticamente (paso 1 manual eliminado)
+
+addons:
+  - name: aws-ebs-csi-driver  # ← instala el driver automáticamente
+    wellKnownPolicies:
+      ebsCSIController: true  # ← crea el IAM role automáticamente (paso 2 y 3 eliminados)
+
 managedNodeGroups:
 
   - name: app-nodes
-    instanceType: t3.small    # ← was t3.micro
+    instanceType: t3.small
     minSize: 1
     maxSize: 5
     desiredCapacity: 2
@@ -17,7 +25,7 @@ managedNodeGroups:
       role: app
 
   - name: db-nodes
-    instanceType: t3.small    # ← was t3.micro
+    instanceType: t3.small
     minSize: 1
     maxSize: 2
     desiredCapacity: 1
