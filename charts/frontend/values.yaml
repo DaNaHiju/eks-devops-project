@@ -26,3 +26,8 @@ nodeAffinity:
 
 metrics:
   enabled: true
+
+alerts:
+  enabled: true
+  errorRateThreshold: 0.05    # 5% error rate
+  latencyThreshold: 1.0       # 1 second latancy p95

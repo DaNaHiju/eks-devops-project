@@ -1,0 +1,25 @@
+{{- if .Values.alerts.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: {{ .Release.Name }}-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: frontend.rules
+      rules:
+        - alert: FrontendHighErrorRate
+          expr: |
+            rate(http_requests_total{status=~"5.."}[5m])
+            /
+            rate(http_requests_total[5m])
+            > {{ .Values.alerts.errorRateThreshold }}
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High error rate on frontend"
+            description: "Error rate above 5% for 5 minutes"
+{{- end }}
