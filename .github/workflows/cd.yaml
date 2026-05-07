@@ -38,7 +38,7 @@ jobs:
           tar xf helmfile.tar.gz
           sudo mv helmfile /usr/local/bin/
           helmfile version
-          helm plugin install https://github.com/databus23/helm-diff || true
+          helm plugin install https://github.com/databus23/helm-diff --version v3.9.14 || true
 
       - name: Deploy monitoring
         run: helmfile apply --selector name=kube-prometheus-stack
