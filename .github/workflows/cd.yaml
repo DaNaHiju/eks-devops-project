@@ -41,7 +41,14 @@ jobs:
           helm plugin install https://github.com/databus23/helm-diff --version v3.9.14 || true
 
       - name: Deploy monitoring
-        run: helmfile apply --selector name=kube-prometheus-stack
+        run: |
+          # En cluster nuevo: sync (sin diff). En cluster existente: apply.
+          if kubectl get crd prometheuses.monitoring.coreos.com &>/dev/null; then
+            helmfile apply --selector name=kube-prometheus-stack
+          else
+            echo "CRDs not found — using sync for first install"
+            helmfile sync --selector name=kube-prometheus-stack
+          fi
 
       - name: Deploy apps
         run: helmfile apply --selector 'name!=kube-prometheus-stack'
