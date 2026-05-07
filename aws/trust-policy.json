@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": {
+      "Federated": "arn:aws:iam::067614922294:oidc-provider/oidc.eks.us-east-1.amazonaws.com/id/E0FA8EF66745230942C709D75FB144F3"
+    },
+    "Action": "sts:AssumeRoleWithWebIdentity",
+    "Condition": {
+      "StringEquals": {
+        "oidc.eks.us-east-1.amazonaws.com/id/E0FA8EF66745230942C709D75FB144F3:sub": "system:serviceaccount:default:db-backup-sa",
+        "oidc.eks.us-east-1.amazonaws.com/id/E0FA8EF66745230942C709D75FB144F3:aud": "sts.amazonaws.com"
+      }
+    }
+  }]
+}

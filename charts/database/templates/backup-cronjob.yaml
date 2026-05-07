@@ -1,0 +1,39 @@
+{{- if .Values.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Release.Name }}-db-backup
+  namespace: {{ .Release.Namespace }}
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: db-backup-sa
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: postgres:15-alpine
+              env:
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: my-app-database-postgresql
+                      key: postgres-password
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+                  FILENAME="backups/db-${TIMESTAMP}.sql.gz"
+                  echo "Starting backup at ${TIMESTAMP}..."
+                  pg_dump -h my-app-database-postgresql \
+                    -U postgres \
+                    -d postgres | gzip | \
+                  aws s3 cp - s3://{{ .Values.backup.bucket }}/${FILENAME}
+                  echo "Backup completed: ${FILENAME}"
+{{- end }}

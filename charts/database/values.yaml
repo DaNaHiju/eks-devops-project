@@ -39,3 +39,9 @@ postgresql:
 
 vpa:
   enabled: true
+
+backup:
+  enabled: true
+  schedule: "0 */6 * * *"
+  bucket: "eks-devops-db-backups-danahiju"
+  iamRoleArn: "arn:aws:iam::067614922294:role/eks-devops-backup-role"
