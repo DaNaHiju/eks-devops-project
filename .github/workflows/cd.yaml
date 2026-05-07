@@ -49,5 +49,14 @@ jobs:
             helmfile sync --selector name=kube-prometheus-stack
           fi
 
+      - name: Deploy VPA          
+        run: |
+          if kubectl get crd verticalpodautoscalers.autoscaling.k8s.io &>/dev/null; then
+            helmfile apply --selector name=vpa
+          else
+            echo "VPA CRDs not found — using sync for first install"
+            helmfile sync --selector name=vpa
+          fi
+
       - name: Deploy apps
         run: helmfile apply --selector 'name!=kube-prometheus-stack'
