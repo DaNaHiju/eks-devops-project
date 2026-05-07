@@ -55,8 +55,14 @@ jobs:
             helmfile apply --selector name=vpa
           else
             echo "VPA CRDs not found — using sync for first install"
-            helmfile sync --selector name=vpa
+            helm repo add fairwinds-stable https://charts.fairwinds.com/stable
+            helm repo update
+            helm upgrade --install vpa fairwinds-stable/vpa \
+              --version 4.4.6 \
+              --namespace kube-system \
+              --create-namespace \
+              --timeout 10m \
+              --wait
           fi
-
       - name: Deploy apps
         run: helmfile apply --selector 'name!=kube-prometheus-stack'

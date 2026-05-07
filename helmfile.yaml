@@ -40,4 +40,5 @@ releases:
     namespace: kube-system
     chart: fairwinds-stable/vpa
     version: "4.4.6"
+    timeout: 600
     values: []
