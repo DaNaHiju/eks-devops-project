@@ -38,3 +38,13 @@ alerts:
   enabled: true
   errorRateThreshold: 0.05    # 5% error rate
   latencyThreshold: 1.0       # 1 second latancy p95
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  cpuThreshold: 70      # escala si CPU > 70%
+  memoryThreshold: 80   # escala si memoria > 80%
+
+vpa:
+  enabled: true

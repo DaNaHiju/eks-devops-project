@@ -36,3 +36,6 @@ postgresql:
 
   metrics:
     enabled: true
+
+vpa:
+  enabled: true
