@@ -3,10 +3,48 @@ repositories:
     url: https://charts.bitnami.com/bitnami
   - name: prometheus-community
     url: https://prometheus-community.github.io/helm-charts
-  - name: fairwinds-stable          
+  - name: fairwinds-stable
     url: https://charts.fairwinds.com/stable
-     
+  - name: external-secrets
+    url: https://charts.external-secrets.io
+
 releases:
+
+  # ── Infrastructure (no dependencies) ────────────────────────────────────────
+
+  - name: kube-prometheus-stack
+    namespace: monitoring
+    chart: prometheus-community/kube-prometheus-stack
+    timeout: 900
+    values:
+      - values/monitoring.yaml
+
+  - name: vpa
+    namespace: kube-system
+    chart: fairwinds-stable/vpa
+    version: "4.4.6"
+    timeout: 600
+    values: []
+
+  # ── ExternalSecrets: operator first, then ClusterSecretStore ─────────────────
+
+  - name: external-secrets
+    namespace: external-secrets
+    chart: external-secrets/external-secrets
+    timeout: 300
+    values:
+      - values/external-secrets.yaml
+
+  - name: external-secrets-config
+    namespace: external-secrets
+    chart: charts/external-secrets-config
+    values:
+      - charts/external-secrets-config/values.yaml
+    needs:
+      - external-secrets/external-secrets
+
+  # ── Application stack (database → backend → frontend) ───────────────────────
+
   - name: my-app-database
     chart: charts/database
     namespace: default
@@ -19,7 +57,8 @@ releases:
     values:
       - charts/backend/values.yaml
     needs:
-      - default/my-app-database   # ← espera que DB esté lista primero
+      - default/my-app-database
+      - external-secrets/external-secrets-config
 
   - name: my-app-frontend
     chart: charts/frontend
@@ -27,18 +66,4 @@ releases:
     values:
       - charts/frontend/values.yaml
     needs:
-      - default/my-app-backend    # ← espera que backend esté listo
- 
-  - name: kube-prometheus-stack
-    namespace: monitoring
-    chart: prometheus-community/kube-prometheus-stack
-    timeout: 900        # ← 900 segundos = 15 minutos
-    values:
-      - values/monitoring.yaml
-
-  - name: vpa
-    namespace: kube-system
-    chart: fairwinds-stable/vpa
-    version: "4.4.6"
-    timeout: 600
-    values: []
+      - default/my-app-backend

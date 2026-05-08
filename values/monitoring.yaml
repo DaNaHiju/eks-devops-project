@@ -1,18 +1,36 @@
 prometheusOperator:
   admissionWebhooks:
-    enabled: true           # ← volvemos a habilitar
+    enabled: true
     patch:
       enabled: true
       resources:
         requests:
           cpu: 10m
           memory: 32Mi
-      tolerations: []       # ← sin restricciones de nodo
+        limits:
+          cpu: 100m
+          memory: 64Mi
+      tolerations: []
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
 
 prometheus:
   prometheusSpec:
     retention: 7d
     serviceMonitorSelectorNilUsesHelmValues: false
+    # t3.small has 2GB RAM — keep Prometheus lean
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -24,6 +42,13 @@ prometheus:
 
 grafana:
   adminPassword: "changeme123"
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
   persistence:
     enabled: true
     storageClassName: gp2
@@ -31,6 +56,13 @@ grafana:
 
 alertmanager:
   alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
     storage:
       volumeClaimTemplate:
         spec:
@@ -39,3 +71,23 @@ alertmanager:
           resources:
             requests:
               storage: 2Gi
+
+# Reduce kube-state-metrics footprint
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+# Node exporter runs on every node — keep it tiny
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      cpu: 50m
+      memory: 32Mi

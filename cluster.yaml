@@ -14,6 +14,14 @@ addons:
     wellKnownPolicies:
       ebsCSIController: true  # ← crea el IAM role automáticamente (paso 2 y 3 eliminados)
 
+  - name: vpc-cni                   
+    wellKnownPolicies:
+      imageBuilder: false
+    configurationValues: |
+      env:
+        ENABLE_PREFIX_DELEGATION: "true"
+        WARM_PREFIX_TARGET: "1"
+
 managedNodeGroups:
 
   - name: app-nodes
