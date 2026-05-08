@@ -1,8 +1,7 @@
 postgresql:
   auth:
-    postgresPassword: "changeme123"
+    existingSecret: "db-init-credentials"
     username: "appuser"
-    password: "changeme123"
     database: "appdb"
 
   primary:

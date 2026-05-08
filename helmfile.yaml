@@ -12,12 +12,22 @@ releases:
 
   # ── Infrastructure (no dependencies) ────────────────────────────────────────
 
+  - name: monitoring-config
+    namespace: monitoring
+    chart: charts/monitoring-config
+    values:
+      - charts/monitoring-config/values.yaml
+    needs:
+      - external-secrets/external-secrets-config
+
   - name: kube-prometheus-stack
     namespace: monitoring
     chart: prometheus-community/kube-prometheus-stack
     timeout: 900
     values:
       - values/monitoring.yaml
+    needs:
+      - monitoring/monitoring-config
 
   - name: vpa
     namespace: kube-system

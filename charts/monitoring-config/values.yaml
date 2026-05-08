@@ -1,0 +1,2 @@
+secretsManager:
+  secretKey: eks-devops/production/grafana-credentials
