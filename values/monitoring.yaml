@@ -2,7 +2,7 @@ prometheusOperator:
   admissionWebhooks:
     enabled: true
     patch:
-      enabled: true
+      enabled: false
       resources:
         requests:
           cpu: 10m
