@@ -1,0 +1,102 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+.env.local
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+Thumbs.db
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Dependencies
+node_modules/
+vendor/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local environment files
+.env
+.env.local
+.env.*.local
+
+# Kubernetes and Helm
+kubeconfig
+kubeconfig-*
+*.kubeconfig
+helm-values-*.yaml
+charts/**/charts/*/
+
+# AWS files
+*.pem
+*.key
+aws-credentials
+.aws/credentials
+.aws/config
+*.tfstate
+*.tfstate.*
+
+# Build and temporary files
+build/
+dist/
+*.log
+*.tmp
+.cache/
+.terraform/
+terraform.tfstate*
+
+# Secret and sensitive data
+secrets/
+secrets.yaml
+*.secret
+.secrets/
+.dockercfg
+.docker/config.json
+
+# Testing and coverage
+coverage/
+.coverage
+*.lcov
+
+# Generated files
+*.bak
+.generated/
+
+# IDE specific
+.classpath
+.project
+.settings/
+*.jar
+*.class
+
+# macOS
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+ehthumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+
+# Helm subcharts descargados (ya los tienes en Chart.lock, no necesitas el .tgz)
+charts/**/charts/*.tgz
+
+# El binario de k9s que se ve en tu repo
+k9s_linux_amd64.deb
+
+# Helmfile environment overrides locals
+helmfile.d/
+.helmfile-*.yaml*.deb
+
