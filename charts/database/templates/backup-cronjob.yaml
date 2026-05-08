@@ -36,6 +36,7 @@ spec:
                   pg_dump -h my-app-database-postgresql \
                     -U postgres \
                     -d postgres | gzip | \
-                  aws s3 cp - s3://{{ .Values.backup.bucket }}/${FILENAME}
-                  echo "Backup completed: ${FILENAME}"
+                  aws s3 cp - s3://{{ .Values.backup.bucket }}/${FILENAME} && \
+                  echo "Backup completed: ${FILENAME}" || \
+                  { echo "Backup failed" && exit 1 }
 {{- end }}
