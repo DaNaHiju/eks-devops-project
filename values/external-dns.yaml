@@ -1,0 +1,25 @@
+# values/external-dns.yaml
+
+provider: aws
+
+aws:
+  region: us-east-1
+  zoneType: public
+
+domainFilters:
+  - yourdomain.com        # ExternalDNS only manages records under this domain
+
+policy: sync              # creates AND deletes records automatically
+
+txtOwnerId: eks-devops-project   # unique ID so ExternalDNS knows which records it owns
+
+serviceAccount:
+  create: false           # we create it ourselves in the chart
+  name: external-dns
+
+logLevel: info
+
+serviceAccount:
+  create: false
+  name: external-dns
+  roleArn: "arn:aws:iam::067614922294:role/eks-devops-externaldns-role"
